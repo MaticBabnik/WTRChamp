@@ -1,14 +1,12 @@
 <script setup lang="ts">
 const props = defineProps<{ name: string }>();
-
 </script>
 
 <template>
     <div class="setting">
         <span class="name">{{ props.name }}</span>
         <div class="value">
-            <slot>
-            </slot>
+            <slot> </slot>
         </div>
     </div>
 </template>
@@ -18,7 +16,7 @@ const props = defineProps<{ name: string }>();
     display: flex;
     flex-direction: row;
 
-    background-color: #520C0C;
+    background-color: #520c0c;
     margin: 5px;
     border-radius: 8px;
     color: white;
@@ -26,18 +24,17 @@ const props = defineProps<{ name: string }>();
     overflow: hidden;
 
     &:hover {
-        outline: 1px solid #BD3E22;
+        outline: 1px solid #bd3e22;
     }
 
     .name {
         padding: 6px;
         flex: 1;
     }
-    
+
     .value {
         background-color: #5e1717;
         width: 30%;
     }
-
 }
 </style>

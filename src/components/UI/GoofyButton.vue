@@ -1,24 +1,26 @@
 <script setup lang="ts">
 const props = defineProps<{
-    autoSize?: boolean
-}>()
+    autoSize?: boolean;
+}>();
 
 const emit = defineEmits<{
-    (e: 'click'): void
-}>()
-
-
+    (e: "click"): void;
+}>();
 </script>
 
 <template>
-    <button class="btn-goofy" :class="{ 'fsize': !props.autoSize }" @click="() => emit('click')">
+    <button
+        class="btn-goofy"
+        :class="{ fsize: !props.autoSize }"
+        @click="() => emit('click')"
+    >
         <slot></slot>
     </button>
 </template>
 
 <style lang="less">
 @button-bg: #640c0c;
-@button-bg-f: #BD3E22;
+@button-bg-f: #bd3e22;
 @button-fg: white;
 @button-shadow: #0004;
 @button-sx: 3px;
@@ -33,7 +35,7 @@ const emit = defineEmits<{
 
     font-size: 36px;
     font-weight: 900;
-    font-family: 'Open Sans';
+    font-family: "Open Sans";
 
     margin: 8px;
     padding: 18px;
@@ -45,9 +47,8 @@ const emit = defineEmits<{
 
     box-shadow: calc(@button-sx*2) calc(@button-sy*2) 0px @button-shadow;
 
-
     &:hover {
-        transition: .1s linear;
+        transition: 0.1s linear;
 
         background-color: @button-bg-f;
 

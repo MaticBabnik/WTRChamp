@@ -29,6 +29,7 @@ function switchView(c: ScreenName, props: Record<string, any>) {
 
     if (to == ScreenName.Game) bgm.stop();
     if (from == ScreenName.Game && to != ScreenName.Game) {
+        document.exitPointerLock();
         bgm.play();
     }
 

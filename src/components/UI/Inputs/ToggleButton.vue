@@ -1,21 +1,29 @@
 <script setup lang="ts">
 interface Props {
-    name: string,
-    value: boolean
+    name: string;
+    value: boolean;
 }
 const props = defineProps<Props>();
 
-const emit = defineEmits<{
-    (e: 'update:value', v: boolean): void
+defineEmits<{
+    (e: "update:value", v: boolean): void;
 }>();
-
-
 </script>
 
 <template>
     <div class="toggle">
-        <input type="checkbox" :name="props.name" :id="props.name" :checked="props.value"
-            @input="$emit('update:value', ($event.target as any as HTMLInputElement).checked)">
+        <input
+            type="checkbox"
+            :name="props.name"
+            :id="props.name"
+            :checked="props.value"
+            @input="
+                $emit(
+                    'update:value',
+                    ($event.target as any as HTMLInputElement).checked
+                )
+            "
+        />
         <div class="visual" :class="{ active: props.value }">
             <div class="inner"></div>
         </div>
@@ -40,7 +48,7 @@ const emit = defineEmits<{
     }
 
     * {
-        transition: .1s ease;
+        transition: 0.1s ease;
     }
 
     .visual {
@@ -84,7 +92,6 @@ const emit = defineEmits<{
                 left: 0;
             }
         }
-
     }
 }
 </style>

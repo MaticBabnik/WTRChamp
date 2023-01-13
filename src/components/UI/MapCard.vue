@@ -1,21 +1,20 @@
 <script setup lang="ts">
 const props = defineProps<{
-    name: string,
-    author: string
+    name: string;
+    author: string;
 }>();
-
 </script>
 <template>
     <div class="map">
-        <h3>{{props.name}}</h3>
+        <h3>{{ props.name }}</h3>
         <span class="bold">Author: </span>
-        <span class="author">{{props.author}}</span>
+        <span class="author">{{ props.author }}</span>
     </div>
 </template>
 
 <style lang="less">
 .map {
-    background-color: #520C0C;
+    background-color: #520c0c;
     border-radius: 10px;
     padding: 10px;
     margin: 0 0 10px 0;
@@ -33,7 +32,7 @@ const props = defineProps<{
     }
 
     .bold {
-        color: #EDCB16;
+        color: #edcb16;
         font-weight: bold;
     }
 

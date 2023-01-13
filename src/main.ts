@@ -6,20 +6,20 @@ import './assets/style.less';
 import { ScreenName } from './grr'
 import App from './App.vue';
 
-import MainMenu from './components/MainMenu.vue';
-import SongSelect from './components/SongSelect.vue';
-import Settings from './components/Settings.vue';
-import Game from './components/Game.vue';
-import Credits from './components/Credits.vue';
+import GameScreen from './components/GameScreen.vue';
+import CreditsScreen from './components/CreditsScreen.vue';
+import SettingsScreen from './components/SettingsScreen.vue';
+import MainMenuScreen from './components/MainMenuScreen.vue';
+import SongSelectScreen from './components/SongSelectScreen.vue';
 
 
 
 const app = createApp(App)
-app.component(ScreenName.Game, Game);
-app.component(ScreenName.Credits, Credits);
-app.component(ScreenName.Settings, Settings);
-app.component(ScreenName.MainMenu, MainMenu);
-app.component(ScreenName.SongSelect, SongSelect);
+app.component(ScreenName.Game, GameScreen);
+app.component(ScreenName.Credits, CreditsScreen);
+app.component(ScreenName.Settings, SettingsScreen);
+app.component(ScreenName.MainMenu, MainMenuScreen);
+app.component(ScreenName.SongSelect, SongSelectScreen);
 app.use(createPinia())
 
 window.addEventListener('click', () => {

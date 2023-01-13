@@ -7,7 +7,6 @@ const SN = ScreenName;
 const emit = defineEmits<{
     (e: "switch", c: ScreenName, props: Record<string, any>): void;
 }>();
-
 </script>
 
 <template>
@@ -16,13 +15,18 @@ const emit = defineEmits<{
         <h1 class="title">WTRChamp</h1>
         <p>
             A FOSS TromboneChamp clone made for a school project.
-            <br><br>
+            <br /><br />
             If you are wondering, WTR stands for Web TRombone
         </p>
         <a href="https://babnik.io/">Website</a>
         <a href="https://github.com/MaticBabnik">Github</a>
 
-        <GoofyButton class="corner" auto-size @click="()=>emit('switch', SN.MainMenu, {})">Back</GoofyButton>
+        <GoofyButton
+            class="corner"
+            auto-size
+            @click="() => emit('switch', SN.MainMenu, {})"
+            >Back</GoofyButton
+        >
     </main>
 </template>
 

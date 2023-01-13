@@ -1,4 +1,4 @@
-import { Song } from "./parser";
+import { Song } from "./util/parser";
 
 async function pickFile(paths: string[]): Promise<string | null> {
     try {

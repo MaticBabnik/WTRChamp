@@ -17,8 +17,8 @@ enum NoteField {
 }
 
 interface ILyric {
-    bar:number,
-    text:string,
+    bar: number,
+    text: string,
 }
 
 interface SongTMB {
@@ -48,22 +48,17 @@ interface SongTMB {
     timesig: number,
 }
 
-enum HitObjectType {
-    SingleNote,
-    SliderNote
-}
-
 /**
  * TIMES ARE IN MS
  */
-interface HitObject {
+export interface SongHitObject {
     start: number,
     end: number,
     pitches: PitchTime[]
 
 }
 
-interface PitchTime {
+export interface PitchTime {
     pitch: number,
     time: number
 }
@@ -71,9 +66,9 @@ interface PitchTime {
 export class Song {
 
     protected rawObject: SongTMB;
-    protected hitObjects: HitObject[];
+    protected hitObjects: SongHitObject[];
 
-    private toHitObject(notes: SongNote[]): HitObject {
+    private toHitObject(notes: SongNote[]): SongHitObject {
         const beat = 60_000 / this.rawObject.tempo; //ms per beat
 
         if (notes.length == 1) {
@@ -91,7 +86,7 @@ export class Song {
                 ]
             };
         } else if (notes.length > 1) {
-            const ho: HitObject = { start: notes[0][NoteField.startTime] * beat, end: 0, pitches: [] };
+            const ho: SongHitObject = { start: notes[0][NoteField.startTime] * beat, end: 0, pitches: [] };
 
             notes.forEach(x => {
                 ho.pitches.push({
@@ -116,11 +111,11 @@ export class Song {
         return overlap;
     }
 
-    private toHitObjects(song: SongTMB): HitObject[] {
-        let ho: HitObject[] = [];
+    private toHitObjects(song: SongTMB): SongHitObject[] {
+        const ho: SongHitObject[] = [];
         let noteGroup: SongNote[] = [];
 
-        for (let note of song.notes) {
+        for (const note of song.notes) {
             const previousNote = noteGroup.at(-1);
 
             if (previousNote &&

@@ -1,46 +1,63 @@
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
-import { propsToAttrMap } from '@vue/shared';
+import { computed } from "vue";
 
 interface Props {
-    name: string,
-    value: number,
-    unit?: string,
-    min?: number,
-    max?: number,
-    step?: number
+    name: string;
+    value: number;
+    unit?: string;
+    min?: number;
+    max?: number;
+    step?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    unit: '', min: 0, max: 100, step: 1
+    unit: "",
+    min: 0,
+    max: 100,
+    step: 1,
 });
 
-const emit = defineEmits<{
-    (e: 'update:value', v: number): void
+defineEmits<{
+    (e: "update:value", v: number): void;
 }>();
 
 const progress = computed(() => {
-    return { width: `${(props.value - props.min) / (props.max - props.min) * 100}%` }
+    return {
+        width: `${
+            ((props.value - props.min) / (props.max - props.min)) * 100
+        }%`,
+    };
 });
 
 const decimalPlaces = computed(() => {
-    return (props.step.toString().split('.')[1] ?? '').length;
+    return (props.step.toString().split(".")[1] ?? "").length;
 });
 
 const label = computed(() => {
     const n = props.value.toFixed(decimalPlaces.value);
     return n + props.unit;
 });
-
 </script>
 
 <template>
     <div class="range">
         <div class="bg" :style="progress"></div>
         <span class="disp">{{ label }}</span>
-        <input type="range" :name="props.name" :id="props.name" :min="props.min" :max="props.max" :step="props.step"
+        <input
+            type="range"
+            :name="props.name"
+            :id="props.name"
+            :min="props.min"
+            :max="props.max"
+            :step="props.step"
             :value="props.value"
-            @input="$emit('update:value', Number(($event.target as any as HTMLInputElement).value))">
+            @input="
+                $emit(
+                    'update:value',
+                    Number(($event.target as any as HTMLInputElement).value)
+                )
+            "
+        />
     </div>
 </template>
 
@@ -75,7 +92,7 @@ const label = computed(() => {
         margin: 0 !important;
     }
 
-    input[type='range'] {
+    input[type="range"] {
         opacity: 0%;
     }
 
@@ -112,7 +129,6 @@ const label = computed(() => {
     input[type="range"]:focus {
         outline: none;
     }
-
 
     input[type="range"] {
         appearance: none;

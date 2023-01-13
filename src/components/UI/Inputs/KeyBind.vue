@@ -1,46 +1,52 @@
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
+import { computed } from "vue";
 import { ref } from "vue";
 interface Props {
-    name: string,
-    value: string
+    name: string;
+    value: string;
 }
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
-    (e: 'update:value', v: string): void
+    (e: "update:value", v: string): void;
 }>();
 
-const bound = computed(() => props.value != 'unbound')
+const bound = computed(() => props.value != "unbound");
 const active = ref(false);
 
 function setCatch(v: boolean) {
     active.value = v;
     if (v) {
-        window.addEventListener('keydown', tryBind);
-        console.log('wel')
-    }
-    else {
-        window.removeEventListener('keydown', tryBind);
-        console.log('no wel')
+        window.addEventListener("keydown", tryBind);
+    } else {
+        window.removeEventListener("keydown", tryBind);
     }
 }
 
 function tryBind(e: KeyboardEvent) {
-    console.log(`Global key ${e.key}`)
-    emit('update:value', e.key);
+    emit("update:value", e.key);
     e.preventDefault();
 }
-
 </script>
 
 <template>
     <div class="keybind" :class="{ active }">
-        <div class="bind" :class="{ bound }" @mouseenter="() => setCatch(true)" @mouseleave="() => setCatch(false)"
-            @keydown="tryBind">
-            &lt;{{ value == 'unbound' && active ? 'Press a key' : value }}&gt;
+        <div
+            class="bind"
+            :class="{ bound }"
+            @mouseenter="() => setCatch(true)"
+            @mouseleave="() => setCatch(false)"
+            @keydown="tryBind"
+        >
+            &lt;{{ value == "unbound" && active ? "Press a key" : value }}&gt;
         </div>
-        <button class="unbind" :disabled="!bound" @click="emit('update:value', 'unbound')">X</button>
+        <button
+            class="unbind"
+            :disabled="!bound"
+            @click="emit('update:value', 'unbound')"
+        >
+            X
+        </button>
     </div>
 </template>
 
@@ -50,7 +56,7 @@ function tryBind(e: KeyboardEvent) {
     display: flex;
     align-items: center;
     box-shadow: red 0 0 0px inset;
-    transition: box-shadow .1s ease;
+    transition: box-shadow 0.1s ease;
 
     &.active {
         box-shadow: red 0 0 20px inset;

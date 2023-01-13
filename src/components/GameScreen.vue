@@ -1,19 +1,21 @@
 <script lang="ts" setup>
 import { ScreenName } from "@/grr";
 import { useSettingsStore } from "@/stores/settings";
-import { ref } from "vue";
+import { ref, nextTick } from "vue";
 import { type IGameStartInfo, BGType, init } from "./Game/init";
-import MainMenu from "./MainMenu.vue";
-const SN = ScreenName;
+import { Game } from "./Game/game";
+import type { Song } from "./Game/util/parser";
+
 const emit = defineEmits<{
     (e: "switch", c: ScreenName, props: Record<string, any>): void;
 }>();
 
 const props = defineProps<{
-    map: string
+    map: string;
 }>();
 
 function tearDown() {
+    game = null;
     console.log("Game torn down");
 }
 
@@ -24,25 +26,51 @@ defineExpose({
 const settings = useSettingsStore();
 const gsi = ref<IGameStartInfo | null>(null);
 const canvas2d = ref<HTMLCanvasElement | null>(null);
+let game: Game | null;
+let song: Song | null = null;
 
-async function main() {
-    gsi.value = await init(props.map);
+function create() {
+    if (!canvas2d.value || !song) throw "Canvas missing";
+    game = new Game(canvas2d.value, settings, song);
+    game.addEventListener("restart", restart);
+    game.addEventListener("exit", exit);
+    game.mainLoop();
 }
 
+function restart() {
+    game?.destroy();
+    game = null;
+    create();
+}
+
+function exit() {
+    game?.destroy();
+    game = null;
+    emit("switch", ScreenName.SongSelect, { focus: props.map });
+}
+
+async function main() {
+    ({ song } = gsi.value = await init(props.map));
+    await nextTick();
+    create();
+}
 
 main();
 </script>
 
 <template>
     <main id="game" v-if="gsi">
-        <div class="overlay"></div>
-        <div class="overlay"></div>
-
+        <video
+            v-if="
+                gsi.bgType == BGType.Video && settings.gameplay.videoBackgrounds
+            "
+            :src="gsi.bg"
+            autoplay
+        ></video>
+        <img v-else-if="gsi.bgType == BGType.Image" :src="gsi.bg" />
         <canvas ref="canvas2d"></canvas>
-
-        <video v-if="gsi.bgType == BGType.Video && settings.gameplay.videoBackgrounds"
-            src="/beatmaps/wantyougone/bg.mp4" autoplay></video>
-        <img v-else-if="gsi.bgType == BGType.Image" src="/beatmaps/TraitorsRequiem/bg.png">
+        <div class="overlay"></div>
+        <div class="overlay"></div>
     </main>
     <main id="game-loading" v-else>
         <h1 class="title">Loading...</h1>

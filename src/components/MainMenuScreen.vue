@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import GoofyButton from "./UI/GoofyButton.vue";
-import Trombone from "./UI/Trombone.vue"
+import TromboneGraphic from "./UI/TromboneGraphic.vue"
 
 import { ScreenName } from "@/grr";
 const SN = ScreenName;
@@ -13,7 +13,7 @@ const emit = defineEmits<{
 
 <template>
     <main class="main-menu">
-        <Trombone class="tr" />
+        <TromboneGraphic class="tr" />
         <h1 class="title">WTRChamp</h1>
 
         <GoofyButton @click="() => emit('switch', SN.SongSelect, {})">Play</GoofyButton>

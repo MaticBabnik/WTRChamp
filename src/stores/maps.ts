@@ -35,9 +35,9 @@ export const useMapStore = defineStore('maps', {
       const data = await f.json() as string[];
 
       const newCached: MapCache = {};
-      let promises: Promise<any>[] = [];
+      const promises: Promise<any>[] = [];
 
-      for (let key of data) {
+      for (const key of data) {
         if (key in this.maps) {
           newCached[key] = this.maps[key];
         } else {

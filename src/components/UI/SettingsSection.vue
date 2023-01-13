@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const props = defineProps<{ name: string }>();
-
 </script>
 
 <template>
@@ -16,11 +15,11 @@ const props = defineProps<{ name: string }>();
     flex-direction: column;
 
     .s-header {
-        color: #EDCA16;
-        background-color: #3E0412;
+        color: #edca16;
+        background-color: #3e0412;
         font-size: 20px;
         font-weight: bold;
-        border-bottom: 2px solid #EDCA16;
+        border-bottom: 2px solid #edca16;
         position: sticky;
         top: 0;
         padding-left: 10px;
@@ -28,7 +27,7 @@ const props = defineProps<{ name: string }>();
         z-index: 100;
     }
 
-    &>*:not(.s-header) {
+    & > *:not(.s-header) {
         margin-left: 5px;
     }
 }

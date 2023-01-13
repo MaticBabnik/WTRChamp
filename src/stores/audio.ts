@@ -23,11 +23,11 @@ export const useAudioStore = defineStore('audio', {
             settings.$subscribe((mut, state) => {
                 this.master.setVolume(state.volume.master / 100);
 
-                for (let wk in this.sfx) {
+                for (const wk in this.sfx) {
                     this.sfx[wk].setVolume(state.volume.sfx / 100)
                 }
 
-                for (let wk in this.music) {
+                for (const wk in this.music) {
                     this.music[wk].setVolume(state.volume.music / 100)
                 }
             });
