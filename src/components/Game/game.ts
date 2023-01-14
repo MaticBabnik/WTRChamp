@@ -6,7 +6,8 @@ import { Player } from "./entities/Player";
 import { HitObjects } from "./entities/HitObjects";
 import { HoldAction } from "./entities/HoldAction";
 import { ScopedGameEvents, GameEvent } from "./util/event";
-import { bezierPoint } from "./util/util";
+import type { AudioStore, tWad } from "@/stores/audio";
+import { SongProgressbar } from "./entities/SongProgressbar";
 
 export interface IEntity {
     render(ctx: CanvasRenderingContext2D): void;
@@ -34,6 +35,9 @@ export class Game extends ScopedGameEvents implements IGameEvents {
     protected player: Player;
     protected hitObjects: HitObjects
     protected holdActions: HoldAction[];
+    protected progressbar: SongProgressbar;
+
+    protected music: tWad;
 
     protected start = Date.now();
 
@@ -43,8 +47,7 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         restart: { state: false, since: 0 }
     }
 
-    constructor(public canvas: HTMLCanvasElement, public settings: ISettings, public song: Song) {
-        //TODO: resize
+    constructor(public canvas: HTMLCanvasElement, public settings: ISettings, public song: Song, protected audioStore: AudioStore) {
         super();
         canvas.requestPointerLock();
         this.w = canvas.width = canvas.offsetWidth;
@@ -53,6 +56,8 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) throw "Couldn't get context";
         this.ctx = ctx;
+        console.log(audioStore.$state);
+        this.music = audioStore.music['song'];
 
         //handle keyboard inputs
         this.registerEventHandler(document, 'keyup', e => this.keyEvent(false, e))
@@ -64,6 +69,7 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         this.grid = new Grid(this);
         this.player = new Player(this);
         this.hitObjects = new HitObjects(this);
+        this.progressbar = new SongProgressbar(this, song.endTime);
         this.holdActions = [
             new HoldAction(this, 'exit', 500, "Hold to exit", () => {
                 this.dispatchEvent(new GameEvent('exit'));
@@ -107,6 +113,12 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         this.a = false;
     }
 
+    public async startGame() {
+        // await this.music.play();
+        this.start = Date.now();
+        this.mainLoop();
+    }
+
     public mainLoop() {
         this.ctx.clearRect(0, 0, this.w, this.h);
 
@@ -118,20 +130,24 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         // Render the playfield grid
         this.grid.render(this.ctx);
 
-        // Render the hitobjects
+        // Render the notes
         this.hitObjects.render(this.ctx);
 
-        // Render the player
+        // Render the player circle thing-y
         this.player.render(this.ctx);
 
-        // Render exit/restart
-        this.holdActions.forEach(ha => ha.render(this.ctx));
-
+        
         //TODO: Render Trombone
-
+        
         //TODO Render Hit indicators (Miss,OK,Good,Perfect)
-
+        
         //TODO: Render Combo indicator
+        
+        // Render the song progress bar
+        this.progressbar.render(this.ctx);
+
+        // Render exit/restart overlays
+        this.holdActions.forEach(ha => ha.render(this.ctx));
 
         if (this.a) requestAnimationFrame(this.mainLoop.bind(this));
     }

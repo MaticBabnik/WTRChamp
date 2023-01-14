@@ -3,18 +3,19 @@ import Wad from 'web-audio-daw';
 import { useSettingsStore } from './settings';
 
 const h_ = () => new Wad({ source: 'sine' });
-type tWad = ReturnType<typeof h_>; // `Wad` is a value and typeof `Wad` is wrong
+const i_ = () => new Wad.Poly({});
+export type tWad = ReturnType<typeof h_>; // `Wad` is a value and typeof `Wad` is wrong
+export type tPolyWad = ReturnType<typeof i_>;
 
+export type AudioStore = ReturnType<typeof useAudioStore>;
 export const useAudioStore = defineStore('audio', {
     state() {
         const master = new Wad.Poly({});
-
-        const a = new Wad({ source: 'noise' });
-
         return {
             master,
             sfx: {} as Record<string, tWad>,
             music: {} as Record<string, tWad>
+
         };
     },
     actions: {

@@ -1,13 +1,65 @@
 import type { Game, IEntity } from "../game";
 import type { HitObjects } from "./HitObjects";
 import type { PitchTime, SongHitObject } from "../util/parser"
-import { type Rect, type Point, remap } from "../util/util";
+import { type Rect, type Point, remap, bezierPoint } from "../util/util";
 import { Constants } from "../constants";
 
-export class HitObject implements IEntity, SongHitObject {
+interface HitBoxSegment {
+    startTime: number;
+    startPitch: number;
+    slope: number;
+}
+
+export class HitObject implements IEntity {
     public start: number;
     public end: number;
     public pitches: PitchTime[];
+    public hitbox: HitBoxSegment[];
+
+    static hitboxLineSegments(ho: SongHitObject) {
+        const hb: HitBoxSegment[] = [];
+        let ppt = ho.pitches[0];
+
+        for (let i = 1; i < ho.pitches.length; i++) {
+            const npt = ho.pitches[i];
+            if (ppt.pitch != npt.pitch) {
+                //bezier
+                const avrgTime = (ppt.time + npt.time);
+
+                const cp: Point[] = [      // put control points in this shape
+                    [ppt.time, ppt.pitch], // ---|
+                    [avrgTime, ppt.pitch], //    |
+                    [avrgTime, npt.pitch], //    |
+                    [npt.time, npt.pitch]  //    |---
+                ];
+
+                const bezierPoints = [...Array(Constants.HITBOX_RESOLUTION)]
+                    .map((x, i) => i / (Constants.HITBOX_RESOLUTION - 1))
+                    .map(n => bezierPoint(cp, n));
+
+                for (let j = 0; j < bezierPoint.length - 1; j++) {
+                    const bp = bezierPoints[j];
+                    const nbp = bezierPoints[j + 1];
+
+                    hb.push({
+                        startTime: bp[0],
+                        startPitch: bp[1],
+                        slope: (nbp[1] - bp[1]) / (nbp[0] - bp[0])
+                    })
+                }
+
+            } else {
+                hb.push({
+                    startTime: ppt.time,
+                    startPitch: ppt.pitch,
+                    slope: 0
+                })
+            }
+
+            ppt = npt;
+        }
+        return hb;
+    }
 
     constructor(
         protected g: Game,
@@ -17,6 +69,7 @@ export class HitObject implements IEntity, SongHitObject {
         this.start = sho.start;
         this.pitches = sho.pitches;
         this.end = sho.end;
+        this.hitbox = HitObject.hitboxLineSegments(sho);
     }
 
     public render(ctx: CanvasRenderingContext2D, tLeft?: number, tRight?: number, gr?: Rect) {
@@ -56,21 +109,5 @@ export class HitObject implements IEntity, SongHitObject {
         }
         ctx.stroke();
         ctx.closePath();
-
-        // ctx.fillStyle = 'white';
-        // ctx.strokeStyle = 'red';
-        // ctx.lineWidth = 20;
-
-        // ctx.beginPath();
-        // ctx.arc(sX, sP, 7, 0, 2 * Math.PI);
-        // ctx.stroke();
-        // ctx.fill();
-        // ctx.closePath();
-        // ctx.beginPath();
-        // ctx.arc(eX, eP, 7, 0, 2 * Math.PI);
-        // ctx.stroke();
-        // ctx.fill();
-        // ctx.closePath();
-
     }
 }

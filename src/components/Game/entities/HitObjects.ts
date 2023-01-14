@@ -2,6 +2,13 @@ import type { Game, IEntity } from "../game";
 import type { Song } from "../util/parser";
 import { HitObject } from "./HitObject";
 
+export enum HitScore {
+    Miss = 'Miss',
+    OK = 'OK',
+    Good = 'Good',
+    Perfect = 'Perfect'
+}
+
 export class HitObjects implements IEntity {
     protected window: number;
     protected song: Song;
@@ -18,6 +25,7 @@ export class HitObjects implements IEntity {
         if (next) {
             if (next.start <= tRight) {
                 this.activeHitObjects.push(new HitObject(this.g, this, next, this.hitObjectIndex));
+                console.log({ns:next.start});
                 this.hitObjectIndex++;
             }
         }
@@ -38,5 +46,10 @@ export class HitObjects implements IEntity {
         this.checkActive(tLeft, tRight);
 
         this.activeHitObjects.forEach(h => h.render(ctx, tLeft, tRight, gr));
+    }
+
+    public score(index: number, length: number, score: HitScore, forceResetCombo?: boolean) {
+        console.log({ index, length, score, forceResetCombo });
+
     }
 }

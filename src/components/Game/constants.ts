@@ -24,4 +24,6 @@ export namespace Constants {
      * (doesn't affect rendering, since those curves are calculated by the browser)
      */
     export const HITBOX_RESOLUTION = 4;
+
+    export const PROGRESSBAR_HEIGHT = 10;
 }

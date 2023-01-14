@@ -6,12 +6,12 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [
-    // VitePWA({
-    //   srcDir: 'src',
-    //   filename: 'sw.ts',
-    //   injectRegister: 'inline',
-    //   strategies: 'injectManifest'
-    // }), //TODO: SW?
+    VitePWA({
+      srcDir: 'src',
+      filename: 'sw.ts',
+      injectRegister: 'inline',
+      strategies: 'injectManifest'
+    }), //TODO: SW?
     vue(),
   ],
   resolve: {

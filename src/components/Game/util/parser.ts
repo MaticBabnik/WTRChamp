@@ -34,7 +34,7 @@ interface SongTMB {
 
     // metadata?
     difficulty: number,
-    endpoint: 519,
+    endpoint: number,
     lyrics: ILyric[], //FIXME: umm?
     savednotespacing: number,
     trackRef: string,
@@ -67,6 +67,7 @@ export class Song {
 
     protected rawObject: SongTMB;
     protected hitObjects: SongHitObject[];
+    public endTime: number;
 
     private toHitObject(notes: SongNote[]): SongHitObject {
         const beat = 60_000 / this.rawObject.tempo; //ms per beat
@@ -143,6 +144,8 @@ export class Song {
         const lastHitobject = this.hitObjects.at(-1);
         if (!lastHitobject) throw new Error("Empty track");
 
+        this.endTime = this.rawObject.endpoint * (60_000 / this.rawObject.tempo);
         console.log(`Last hitobject ends @ ${lastHitobject?.end / 1_000} s`)
+        console.log(this.hitObjects[0]);
     }
 }

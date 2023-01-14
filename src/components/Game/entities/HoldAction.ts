@@ -18,7 +18,7 @@ export class HoldAction implements IEntity {
         if (!key.state) return;
 
         if (key.since + this.holdTime <= now) {
-            if (key.since = this.lastTriggered) return;
+            if ((key.since = this.lastTriggered)) return;
 
             this.lastTriggered = key.since;
             this.callback();

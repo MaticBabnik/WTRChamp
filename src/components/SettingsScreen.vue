@@ -67,9 +67,9 @@ function clear() {
                             name="s-g-tw"
                             v-model:value="settings.gameplay.timeWindow"
                             unit="ms"
-                            :min="5000"
-                            :max="15000"
-                            :class="1000"
+                            :min="1000"
+                            :max="5000"
+                            :step="500"
                         />
                     </Setting>
                 </SettingsSection>
