@@ -1,12 +1,18 @@
-import type { ISettings } from "@/stores/settings";
 import { Constants } from "./constants";
-import { Grid } from "./entities/Grid";
+
 import type { Song } from "./util/parser";
-import { Player } from "./entities/Player";
-import { HitObjects } from "./entities/HitObjects";
-import { HoldAction } from "./entities/HoldAction";
 import { ScopedGameEvents, GameEvent } from "./util/event";
-import type { AudioStore, tWad } from "@/stores/audio";
+
+import type { AudioStore } from "@/stores/audio";
+import type { ISettings } from "@/stores/settings";
+import { ScoreKeeper } from "./score";
+
+import { Grid } from "./entities/Grid";
+import { Player } from "./entities/Player";
+import { HoldAction } from "./entities/HoldAction";
+import { HitObjects } from "./entities/HitObjects";
+import { ScoreOverlay } from "./entities/ScoreOverlay";
+import { HitIndicators } from "./entities/HitIndicators";
 import { SongProgressbar } from "./entities/SongProgressbar";
 
 export interface IEntity {
@@ -27,25 +33,16 @@ interface IGameEvents {
 
 export class Game extends ScopedGameEvents implements IGameEvents {
     protected ctx: CanvasRenderingContext2D;
-    protected a = true;
-    public w: number;
-    public h: number;
 
+    // entities
     protected grid: Grid;
     protected player: Player;
     protected hitObjects: HitObjects
     protected holdActions: HoldAction[];
     protected progressbar: SongProgressbar;
-
-    protected music: tWad;
-
-    protected start = Date.now();
-
-    public keyboard: Record<Kkey, IKeyState> = {
-        exit: { state: false, since: 0 },
-        play: { state: false, since: 0 },
-        restart: { state: false, since: 0 }
-    }
+    protected hitIndicators: HitIndicators;
+    protected scoreOverlay: ScoreOverlay;
+    public scoreKeeper = new ScoreKeeper();
 
     constructor(public canvas: HTMLCanvasElement, public settings: ISettings, public song: Song, protected audioStore: AudioStore) {
         super();
@@ -56,8 +53,6 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         const ctx = canvas.getContext('2d', { alpha: true });
         if (!ctx) throw "Couldn't get context";
         this.ctx = ctx;
-        console.log(audioStore.$state);
-        this.music = audioStore.music['song'];
 
         //handle keyboard inputs
         this.registerEventHandler(document, 'keyup', e => this.keyEvent(false, e))
@@ -68,8 +63,10 @@ export class Game extends ScopedGameEvents implements IGameEvents {
 
         this.grid = new Grid(this);
         this.player = new Player(this);
-        this.hitObjects = new HitObjects(this);
         this.progressbar = new SongProgressbar(this, song.endTime);
+        this.hitIndicators = new HitIndicators(this);
+        this.hitObjects = new HitObjects(this, this.hitIndicators);
+        this.scoreOverlay = new ScoreOverlay(this);
         this.holdActions = [
             new HoldAction(this, 'exit', 500, "Hold to exit", () => {
                 this.dispatchEvent(new GameEvent('exit'));
@@ -78,6 +75,23 @@ export class Game extends ScopedGameEvents implements IGameEvents {
                 this.dispatchEvent(new GameEvent('restart'));
             })
         ];
+    }
+
+    //#region Time
+
+    protected start = Date.now();
+
+    public get time() {
+        return Date.now() - this.start;
+    }
+
+    //#endregion Time
+
+    //#region input
+    public keyboard: Record<Kkey, IKeyState> = {
+        exit: { state: false, since: 0 },
+        play: { state: false, since: 0 },
+        restart: { state: false, since: 0 }
     }
 
     keyEvent(v: boolean, e: KeyboardEvent) {
@@ -105,52 +119,11 @@ export class Game extends ScopedGameEvents implements IGameEvents {
             this.canvas.requestPointerLock();
         }
     }
+    //#endregion input
 
-    public destroy() {
-        // destory all events
-        this.removeGameEventHandlers();
-
-        this.a = false;
-    }
-
-    public async startGame() {
-        // await this.music.play();
-        this.start = Date.now();
-        this.mainLoop();
-    }
-
-    public mainLoop() {
-        this.ctx.clearRect(0, 0, this.w, this.h);
-
-        // Dim the background
-        const alpha = this.settings.gameplay.backgroundDim / 100;
-        this.ctx.fillStyle = `rgba(0,0,0,${alpha})`;
-        this.ctx.fillRect(0, 0, this.w, this.h);
-
-        // Render the playfield grid
-        this.grid.render(this.ctx);
-
-        // Render the notes
-        this.hitObjects.render(this.ctx);
-
-        // Render the player circle thing-y
-        this.player.render(this.ctx);
-
-        
-        //TODO: Render Trombone
-        
-        //TODO Render Hit indicators (Miss,OK,Good,Perfect)
-        
-        //TODO: Render Combo indicator
-        
-        // Render the song progress bar
-        this.progressbar.render(this.ctx);
-
-        // Render exit/restart overlays
-        this.holdActions.forEach(ha => ha.render(this.ctx));
-
-        if (this.a) requestAnimationFrame(this.mainLoop.bind(this));
-    }
+    //#region Layout
+    public w: number;
+    public h: number;
 
     public get gameRect() {
         const x = Constants.MARGIN;
@@ -160,9 +133,57 @@ export class Game extends ScopedGameEvents implements IGameEvents {
 
         return { x, y, w, h };
     }
+    //#endregion Layout
 
-    public get time() {
-        return Date.now() - this.start;
+    //#region Lifetime stuff
+    protected run = true;
+
+    public async startGame() {
+        // await this.music.play();
+        this.start = Date.now();
+        this.mainLoop();
     }
 
+    public destroy() {
+        // destory all events
+        this.removeGameEventHandlers();
+        this.player.trombone.stop();
+        this.run = false;
+    }
+    //#endregion Lifetime stuff
+
+    public get playerPitch() {
+        return this.player.playerPitch;
+    }
+
+    public mainLoop() {
+        this.ctx.clearRect(0, 0, this.w, this.h);
+
+        // Dim the background
+        const alpha = this.settings.gameplay.backgroundDim / 100;
+        this.ctx.fillStyle = `rgba(0,0,0,${alpha})`;
+        this.ctx.fillRect(0, 0, this.w, this.h);
+        // Render the playfield grid
+        this.grid.render(this.ctx);
+        // Render the notes
+        this.hitObjects.render(this.ctx);
+        // Render the player circle thing-y
+        this.player.render(this.ctx);
+        //TODO: Render Trombone
+
+        // Render Hit indicators (Miss,OK,Good,Perfect)
+        this.hitIndicators.render(this.ctx);
+        // Render the song progress bar
+        this.progressbar.render(this.ctx);
+        // Render score and combo text
+        this.scoreOverlay.render(this.ctx);
+        // Render exit/restart overlays
+        this.holdActions.forEach(ha => ha.render(this.ctx));
+
+        if (this.time > this.song.endTime) {
+            this.dispatchEvent(new GameEvent('done'));
+        }
+
+        if (this.run) requestAnimationFrame(this.mainLoop.bind(this));
+    }
 }

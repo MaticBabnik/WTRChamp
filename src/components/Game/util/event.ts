@@ -1,4 +1,4 @@
-export type GEventType = 'exit' | 'restart';
+export type GEventType = 'exit' | 'restart' | 'done';
 
 export class GameEvent extends Event {
     public constructor(type: GEventType) {
@@ -76,26 +76,4 @@ export class ScopedGameEvents extends EventTarget {
             ah.target.removeEventListener(ah.type, ah.handler);
         })
     }
-
-    // public registerEventHandler<ETarget extends EventTarget>
-    //     (
-    //         target: ETarget,
-    //         type: Parameters<ETarget["addEventListener"]>[0],
-    //         handler: Parameters<ETarget["addEventListener"]>[1]
-    //     ) {
-    //     if (handler == null) return;
-    //     target.addEventListener(type, handler);
-    //     this.activeHandlers.push({ target, type, handler });
-    // }
-    // public _removeEventHandler<ETarget extends EventTarget>
-    //     (
-    //         target: ETarget,
-    //         type: Parameters<ETarget["removeEventListener"]>[0],
-    //         handler: Parameters<ETarget["removeEventListener"]>[1]
-    //     ) {
-    //     target.removeEventListener(type, handler);
-    //     this.activeHandlers = this.activeHandlers.filter(r =>
-    //         r.type != type || r.handler != handler || r.target != target
-    //     )
-    // }
 }

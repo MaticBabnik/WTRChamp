@@ -5,8 +5,8 @@ import { ref, nextTick } from "vue";
 import { type IGameStartInfo, BGType, init } from "./Game/init";
 import { Game } from "./Game/game";
 import type { Song } from "./Game/util/parser";
-import { useAudioStore, type tWad } from "@/stores/audio";
-import Wad from "web-audio-daw";
+import { useAudioStore } from "@/stores/audio";
+import { useScoresStore } from "@/stores/scores";
 
 const emit = defineEmits<{
     (e: "switch", c: ScreenName, props: Record<string, any>): void;
@@ -27,6 +27,8 @@ defineExpose({
 
 const settings = useSettingsStore();
 const audio = useAudioStore();
+const scores = useScoresStore();
+
 const gsi = ref<IGameStartInfo | null>(null);
 const canvas2d = ref<HTMLCanvasElement | null>(null);
 const videoEl = ref<HTMLVideoElement | null>(null);
@@ -35,29 +37,35 @@ const audioEl = ref<HTMLAudioElement | null>(null);
 let game: Game | null;
 let song: Song | null = null;
 
-function awaitOnload(el: HTMLMediaElement) {
-    console.log(el.readyState);
-    if (el.readyState == 4) {
-        return;
-    }
-
-    return new Promise(resolve => {
-        el.addEventListener('load', () => resolve(void 0), { once: true })
-        if (el.readyState == 4) resolve(void 0);
-    });
+async function preload(el: HTMLMediaElement, volume: boolean = false) {
+    if (volume) el.volume = 0;
+    await el.play();
+    el.pause();
+    el.currentTime = 0;
+    if (volume) el.volume = (settings.volume.master / 100) * (settings.volume.music / 100);
 }
 
-function create() {
+async function create() {
+    const [v, a] = [videoEl.value, audioEl.value];
+
+    if (v) await preload(v);
+    if (a) await preload(a)
+
+    if (v) v.play();
+    if (a) a.play();
+
     if (!canvas2d.value || !song) throw "Canvas missing";
     game = new Game(canvas2d.value, settings, song, audio);
     game.addEventListener("restart", restart);
     game.addEventListener("exit", exit);
+    game.addEventListener("done", done);
     game.startGame();
 }
 
-function restart() {
+async function restart() {
     game?.destroy();
     game = null;
+    await nextTick();
     create();
 }
 
@@ -67,39 +75,20 @@ function exit() {
     emit("switch", ScreenName.SongSelect, { focus: props.map });
 }
 
-async function waitTillPlayable(w: tWad) {
-    const vBackup = w.volume;
-    w.setVolume(0);
-    await w.play();
-    w.stop();
-    w.setVolume(vBackup);
-    return;
+function done() {
+    const score = game?.scoreKeeper.Stats;
+    if (score)
+        scores.addScore(props.map, '(You)', score.score);
+    game?.destroy();
+    game = null;
+
+    emit("switch", ScreenName.Score, { map: props.map, score });
 }
 
 async function main() {
     console.log("initalizing...");
     ({ song } = gsi.value = await init(props.map));
     await nextTick();
-    const songAudio = audio.registerWad('music', 'song', new Wad({ source: gsi.value.audio }));
-    // waitTillPlayable(songAudio);
-    const [v, a] = [videoEl.value, audioEl.value];
-
-    if (v) {
-        console.log("waiting for video");
-        await awaitOnload(v);
-    }
-    if (a) {
-        const pr = awaitOnload(a);
-        a.volume = 0;
-        console.log("waiting for audio");
-        await a.play();
-        a.pause();
-        a.currentTime = 0;
-        a.volume = (settings.volume.master / 100) * (settings.volume.music / 100);
-        console.log(a.volume);
-    }
-    if (v) v.play();
-    if (a) a.play();
     create();
 }
 

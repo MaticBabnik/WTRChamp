@@ -30,7 +30,6 @@ function switchView(c: ScreenName, props: Record<string, any>) {
     if (to == ScreenName.Game) bgm.stop();
     if (from == ScreenName.Game && to != ScreenName.Game) {
         document.exitPointerLock();
-        audio.music['song']?.stop();
         bgm.play();
     }
 
@@ -41,5 +40,5 @@ function switchView(c: ScreenName, props: Record<string, any>) {
 </script>
 
 <template>
-    <component ref="cv" :is="currentView.c" v-bind="currentView.props" @switch="switchView" />
+    <component ref="cv" :is="currentView.c" v-bind="currentView.props" @switch="switchView"/>
 </template>

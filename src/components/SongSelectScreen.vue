@@ -7,6 +7,7 @@ import { useMapStore } from "@/stores/maps";
 import { computed } from "vue";
 
 import { ScreenName } from "@/grr";
+import { useScoresStore } from "@/stores/scores";
 const SN = ScreenName;
 
 const emit = defineEmits<{
@@ -18,11 +19,19 @@ const props = defineProps<{
 }>();
 
 const maps = useMapStore();
+if (Object.keys(maps.maps).length == 0) {
+    maps.fetchMaps();
+}
+
+const scores = useScoresStore();
 
 const selectedKey = ref(props.focus ?? "");
 
 const selectedMap = computed(() => {
     return maps.maps[selectedKey.value];
+});
+const selectedScores = computed(() => {
+    return scores.scores[selectedKey.value] ?? [];
 });
 </script>
 
@@ -31,23 +40,15 @@ const selectedMap = computed(() => {
         <div class="grid">
             <div id="top">
                 <h1 class="title">Play...</h1>
-                <GoofyButton auto-size @click="maps.update()">
+                <GoofyButton auto-size @click="maps.fetchMaps()">
                     Refresh
                 </GoofyButton>
                 <div style="flex: 1"></div>
-                <GoofyButton auto-size @click="emit('switch', SN.MainMenu, {})"
-                    >Back</GoofyButton
-                >
+                <GoofyButton auto-size @click="emit('switch', SN.MainMenu, {})">Back</GoofyButton>
             </div>
             <div id="list">
-                <MapCard
-                    v-for="(map, k) in maps.maps"
-                    :key="k"
-                    :class="{ selected: k == selectedKey }"
-                    :name="map.name"
-                    :author="map.author"
-                    @click="selectedKey = k"
-                />
+                <MapCard v-for="(map, k) in maps.maps" :key="k" :class="{ selected: k == selectedKey }" :name="map.name"
+                    :author="map.author" @click="selectedKey = k" />
             </div>
             <div id="info">
                 <div class="details" v-if="selectedKey != ''">
@@ -61,16 +62,21 @@ const selectedMap = computed(() => {
                     <span class="genre">{{ selectedMap?.genre }}</span>
                     <span class="field">Description: </span>
                     <p class="description">{{ selectedMap?.description }}</p>
-                    <span class="field">Preview:</span>
-                    <audio
-                        controls
-                        :src="`/beatmaps/${selectedKey}/song.ogg`"
-                    ></audio>
+                    <!-- <span class="field">Preview:</span> -->
+                    <!-- <audio controls :src="`/beatmaps/${selectedKey}/song.ogg`"></audio> -->
+                    <span class="field">Scores:</span>
+                    <table>
+                        <tr>
+                            <th>Name</th>
+                            <th>Score</th>
+                        </tr>
+                        <tr v-for="(s, k) in selectedScores" :key="k">
+                            <td>{{ s.name }}</td>
+                            <td>{{ s.score }}</td>
+                        </tr>
+                    </table>
                 </div>
-                <GoofyButton
-                    v-if="selectedKey != ''"
-                    @click="emit('switch', SN.Game, { map: selectedKey })"
-                    >Play
+                <GoofyButton v-if="selectedKey != ''" @click="emit('switch', SN.Game, { map: selectedKey })">Play
                 </GoofyButton>
             </div>
         </div>
@@ -117,6 +123,7 @@ const selectedMap = computed(() => {
                 }
             }
 
+            overflow-y: auto;
             grid-area: info;
             width: 500px;
             padding: 10px;
@@ -131,6 +138,8 @@ const selectedMap = computed(() => {
                 flex-direction: column;
                 align-items: center;
                 flex: 1;
+
+                overflow-y: scroll;
 
                 span {
                     color: white;
@@ -154,6 +163,25 @@ const selectedMap = computed(() => {
                     display: block;
                     margin-bottom: 10px;
                     text-align: center;
+                }
+
+                table {
+                    border-collapse: collapse;
+                    margin-top: 10px;
+                    width: 75%;
+
+                    td,
+                    th {
+                        border: 2px solid white;
+                        color: white;
+                        font-size: 24px;
+                        padding: 5px;
+                        width: 50%;
+                    }
+
+                    td:nth-child(2) {
+                        text-align: right;
+                    }
                 }
 
                 audio {

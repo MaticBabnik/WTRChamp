@@ -33,6 +33,7 @@ export class HoldAction implements IEntity {
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 3;
         ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
         ctx.font = "48px 'Open Sans'";
         ctx.strokeText(this.text, this.g.w / 2, this.g.h / 2 - 20);
         ctx.fillText(this.text, this.g.w / 2, this.g.h / 2 - 20);

@@ -5,7 +5,7 @@ import { Trombone } from "../audio/trombone";
 
 export class Player implements IEntity {
     protected gY = 0;
-    protected trombone: Trombone;
+    public trombone: Trombone;
     protected trSynced: boolean = true;
     protected trPlaying: boolean = false;
 

@@ -43,3 +43,7 @@ export function bezierPoint(controlPoints: Point[], f: number): Point {
 
     return [x, y];
 }
+
+// export function lineDist(linePoint:Point, k) {
+
+// }

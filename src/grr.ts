@@ -6,6 +6,8 @@ export enum ScreenName {
     Settings = 'Settings',
 
     Game = 'Game',
+
+    Score = 'Score'
 }
 
 

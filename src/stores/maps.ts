@@ -30,7 +30,7 @@ export const useMapStore = defineStore('maps', {
     };
   },
   actions: {
-    async update() {
+    async fetchMaps() {
       const f = await fetch('/beatmaps.json');
       const data = await f.json() as string[];
 

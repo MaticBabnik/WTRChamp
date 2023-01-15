@@ -36,120 +36,61 @@ function clear() {
     <main class="settings">
         <div class="main-grid">
             <h1 class="title" id="title">Settings</h1>
-            <GoofyButton
-                class="corner"
-                id="back"
-                auto-size
-                @click="() => emit('switch', SN.MainMenu, {})"
-            >
+            <GoofyButton class="corner" id="back" auto-size @click="() => emit('switch', SN.MainMenu, {})">
                 Back
             </GoofyButton>
             <div id="settings">
                 <SettingsSection name="Gameplay">
                     <Setting name="Video backgrounds">
-                        <Toggle
-                            class="stretch"
-                            name="s-g-video"
-                            v-model:value="settings.gameplay.videoBackgrounds"
-                        />
+                        <Toggle class="stretch" name="s-g-video" v-model:value="settings.gameplay.videoBackgrounds" />
                     </Setting>
                     <Setting name="Background dim">
-                        <Range
-                            class="stretch"
-                            name="s-g-dim"
-                            v-model:value="settings.gameplay.backgroundDim"
-                            unit="%"
-                        />
+                        <Range class="stretch" name="s-g-dim" v-model:value="settings.gameplay.backgroundDim"
+                            unit="%" />
                     </Setting>
                     <Setting name="Time window">
-                        <Range
-                            class="stretch"
-                            name="s-g-tw"
-                            v-model:value="settings.gameplay.timeWindow"
-                            unit="ms"
-                            :min="1000"
-                            :max="5000"
-                            :step="500"
-                        />
+                        <Range class="stretch" name="s-g-tw" v-model:value="settings.gameplay.timeWindow" unit="ms"
+                            :min="1000" :max="5000" :step="500" />
                     </Setting>
                 </SettingsSection>
 
                 <SettingsSection name="Controls">
                     <Setting name="Play">
-                        <KeyBind
-                            class="stretch"
-                            name="s-c-play"
-                            v-model:value="settings.controls.play"
-                        />
+                        <KeyBind class="stretch" name="s-c-play" v-model:value="settings.controls.play" />
                     </Setting>
                     <Setting name="Restart">
-                        <KeyBind
-                            class="stretch"
-                            name="s-c-restart"
-                            v-model:value="settings.controls.restart"
-                        />
+                        <KeyBind class="stretch" name="s-c-restart" v-model:value="settings.controls.restart" />
                     </Setting>
                     <Setting name="Exit song">
-                        <KeyBind
-                            class="stretch"
-                            name="s-c-quit"
-                            v-model:value="settings.controls.exit"
-                        />
+                        <KeyBind class="stretch" name="s-c-quit" v-model:value="settings.controls.exit" />
                     </Setting>
                     <Setting name="Sensitivity">
-                        <Range
-                            class="stretch"
-                            name="s-c-sens"
-                            v-model:value="settings.controls.sensitivity"
-                            unit="x"
-                            :min="0.1"
-                            :max="2"
-                            :step="0.01"
-                        />
+                        <Range class="stretch" name="s-c-sens" v-model:value="settings.controls.sensitivity" unit="x"
+                            :min="0.1" :max="2" :step="0.01" />
                     </Setting>
                 </SettingsSection>
 
                 <SettingsSection name="Volume">
                     <Setting name="Master">
-                        <Range
-                            class="stretch"
-                            name="s-v-master"
-                            v-model:value="settings.volume.master"
-                            unit="%"
-                        />
+                        <Range class="stretch" name="s-v-master" v-model:value="settings.volume.master" unit="%" />
                     </Setting>
                     <Setting name="Music">
-                        <Range
-                            class="stretch"
-                            name="s-v-music"
-                            v-model:value="settings.volume.music"
-                            unit="%"
-                        />
+                        <Range class="stretch" name="s-v-music" v-model:value="settings.volume.music" unit="%" />
                     </Setting>
                     <Setting name="SFX">
-                        <Range
-                            class="stretch"
-                            name="s-v-sfx"
-                            v-model:value="settings.volume.sfx"
-                            unit="%"
-                        />
+                        <Range class="stretch" name="s-v-sfx" v-model:value="settings.volume.sfx" unit="%" />
                     </Setting>
                 </SettingsSection>
 
                 <SettingsSection name="Development">
-                    <Setting name="Video backgrounds">
-                        <Toggle
-                            class="stretch"
-                            name="s-d-hitbox"
-                            v-model:value="settings.developer.debugHitbox"
-                        />
+                    <Setting name="Debug hitboxes">
+                        <Toggle class="stretch" name="s-d-hitbox" v-model:value="settings.developer.debugHitbox" />
                     </Setting>
                     <p style="text-align: left">
                         <a href="" @click="clear">Clear localStorage </a> - You
                         broke it, didn't you? <br />
-                        <!-- <a href="">Load dummy scores </a> - Too lazy to play video games? <br> -->
-                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                            >God mode
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
+                            God mode
                         </a>
                     </p>
                 </SettingsSection>

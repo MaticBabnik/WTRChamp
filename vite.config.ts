@@ -11,7 +11,7 @@ export default defineConfig({
       filename: 'sw.ts',
       injectRegister: 'inline',
       strategies: 'injectManifest'
-    }), //TODO: SW?
+    }),
     vue(),
   ],
   resolve: {
