@@ -54,13 +54,14 @@ interface SongTMB {
 export interface SongHitObject {
     start: number,
     end: number,
-    pitches: PitchTime[]
-
+    segments: HitObjectSegment[]
 }
 
-export interface PitchTime {
-    pitch: number,
-    time: number
+export interface HitObjectSegment {
+    pitchStart: number,
+    pitchEnd: number,
+    timeStart: number,
+    timeEnd: number
 }
 
 export class Song {
@@ -72,35 +73,21 @@ export class Song {
     private toHitObject(notes: SongNote[]): SongHitObject {
         const beat = 60_000 / this.rawObject.tempo; //ms per beat
 
-        if (notes.length == 1) {
-            const start = notes[0][NoteField.startTime],
-                end = start + notes[0][NoteField.length],
-                pitch1 = notes[0][NoteField.startPitch],
-                pitch2 = notes[0][NoteField.endPitch];
+        const ho: SongHitObject = { start: notes[0][NoteField.startTime] * beat, end: 0, segments: [] };
 
-            return {
-                start: start * beat,
-                end: end * beat,
-                pitches: [
-                    { time: start * beat, pitch: pitch1 },
-                    { time: end * beat, pitch: pitch2 },
-                ]
-            };
-        } else if (notes.length > 1) {
-            const ho: SongHitObject = { start: notes[0][NoteField.startTime] * beat, end: 0, pitches: [] };
+        notes.forEach(x => {
+            ho.segments.push({
+                pitchStart: x[NoteField.startPitch],
+                pitchEnd: x[NoteField.endPitch],
+                timeStart: x[NoteField.startTime] * beat,
+                timeEnd: (x[NoteField.startTime] + x[NoteField.length]) * beat
+            });
+        })
 
-            notes.forEach(x => {
-                ho.pitches.push({
-                    pitch: x[NoteField.endPitch],
-                    time: (x[NoteField.startTime] + x[NoteField.length]) * beat
-                });
-            })
+        ho.end = ho.segments.at(-1)?.timeEnd ?? 0;
+        if (ho.end == 0) throw "WTF???";
 
-            ho.end = ho.pitches.at(-1)?.time ?? 0;
-            if (ho.end == 0) throw "WTF???";
-
-            return ho;
-        } else throw new Error("No notes passed");
+        return ho;
     }
 
     private static noteOverlap(n1: SongNote, n2: SongNote): number {

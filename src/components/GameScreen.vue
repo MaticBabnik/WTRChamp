@@ -103,8 +103,6 @@ main();
         " :src="gsi.bg" ref="videoEl"></video>
         <img v-else-if="gsi.bgType == BGType.Image" :src="gsi.bg" />
         <canvas ref="canvas2d"></canvas>
-        <div class="overlay"></div>
-        <div class="overlay"></div>
     </main>
     <main id="game-loading" v-else>
         <h1 class="title">Loading...</h1>
