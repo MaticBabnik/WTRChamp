@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import Wad from 'web-audio-daw';
-import { useSettingsStore } from './settings';
+import { useSettingsStore, type ISettings } from './settings';
 
 const h_ = () => new Wad({ source: 'sine' });
 const i_ = () => new Wad.Poly({});
@@ -19,18 +19,21 @@ export const useAudioStore = defineStore('audio', {
         };
     },
     actions: {
+        setVolumes(settings: ISettings) {
+            this.master.setVolume(settings.volume.master / 100);
+
+            for (const wk in this.sfx) {
+                this.sfx[wk].setVolume(settings.volume.sfx / 100)
+            }
+
+            for (const wk in this.music) {
+                this.music[wk].setVolume(settings.volume.music / 100)
+            }
+        },
         init() {
             const settings = useSettingsStore();
             settings.$subscribe((mut, state) => {
-                this.master.setVolume(state.volume.master / 100);
-
-                for (const wk in this.sfx) {
-                    this.sfx[wk].setVolume(state.volume.sfx / 100)
-                }
-
-                for (const wk in this.music) {
-                    this.music[wk].setVolume(state.volume.music / 100)
-                }
+                this.setVolumes(state);
             });
         },
         registerWad(type: 'sfx' | 'music', name: string, wad: tWad) {
@@ -44,7 +47,11 @@ export const useAudioStore = defineStore('audio', {
 
             this.master.add(wad);
             this[type][name] = wad;
-            wad.setVolume(settings.volume[type] / 100);
+
+            wad.setVolume((wad.volume = settings.volume[type] / 100));
+
+            this.setVolumes(settings.$state);
+
             return wad;
         }
     }

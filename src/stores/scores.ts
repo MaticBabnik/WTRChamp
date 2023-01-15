@@ -12,9 +12,9 @@ export const useScoresStore = defineStore('highscores', {
 
         try {
             const d = localStorage.getItem('highscores');
-            console.log('Got highscores');
             stored = JSON.parse(d ?? '');
-            console.log('Parsed highscores');
+            console.log(`Read ${Object.keys(stored ?? {}).length} highscore lists from localStorage`);
+
         } catch {
             // if loading fails we write the defaults
             console.warn('Highscores corrupted')

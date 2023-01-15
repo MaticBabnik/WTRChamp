@@ -15,18 +15,16 @@ const emit = defineEmits<{
         <h1 class="title">WTRChamp</h1>
         <p>
             A FOSS TromboneChamp clone made for a school project.
-            <br /><br />
+            <br>
+            <br>
             If you are wondering, WTR stands for Web TRombone
+            <br>
+            <a href="https://github.com/MaticBabnik/WTRChamp">Repository</a>
+            <br>
+            <a href="https://babnik.io/">Website</a> | <a href="https://github.com/MaticBabnik">Github</a>
         </p>
-        <a href="https://babnik.io/">Website</a>
-        <a href="https://github.com/MaticBabnik">Github</a>
 
-        <GoofyButton
-            class="corner"
-            auto-size
-            @click="() => emit('switch', SN.MainMenu, {})"
-            >Back</GoofyButton
-        >
+        <GoofyButton class="corner" auto-size @click="() => emit('switch', SN.MainMenu, {})">Back</GoofyButton>
     </main>
 </template>
 

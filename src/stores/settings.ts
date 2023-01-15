@@ -25,18 +25,18 @@ export interface ISettings {
 
 const DEFAULTS: ISettings = {
   gameplay: {
-    videoBackgrounds: false,
-    backgroundDim: 30,
-    timeWindow: 10_000
+    videoBackgrounds: true,
+    backgroundDim: 35,
+    timeWindow: 3_000
   },
   controls: {
     restart: 'r',
     play: 'z',
-    exit: 'Escape',
+    exit: 'q',
     sensitivity: 1.0,
   },
   volume: {
-    master: 100,
+    master: 50,
     music: 100,
     sfx: 100
   },
@@ -51,9 +51,10 @@ export const useSettingsStore = defineStore('settings', {
     try {
       const d = localStorage.getItem('settings');
       settings = JSON.parse(d ?? '');
+      console.log('Read settings from localstorage');
     } catch {
       // if loading fails we write the defaults
-      console.log('Settings were broken, overwriting')
+      console.warn('Settings were broken, overwriting')
       localStorage.setItem('settings', JSON.stringify(settings = DEFAULTS));
     }
     defaultsDeep(settings, DEFAULTS); //merge with defaults just in case

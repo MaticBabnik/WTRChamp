@@ -38,7 +38,8 @@ let game: Game | null;
 let song: Song | null = null;
 
 async function preload(el: HTMLMediaElement, volume: boolean = false) {
-    if (volume) el.volume = 0;
+    console.log({ volume });
+    el.volume = 0;
     await el.play();
     el.pause();
     el.currentTime = 0;
@@ -49,7 +50,7 @@ async function create() {
     const [v, a] = [videoEl.value, audioEl.value];
 
     if (v) await preload(v);
-    if (a) await preload(a)
+    if (a) await preload(a, true);
 
     if (v) v.play();
     if (a) a.play();
@@ -86,7 +87,7 @@ function done() {
 }
 
 async function main() {
-    console.log("initalizing...");
+    console.log("Fetching song...");
     ({ song } = gsi.value = await init(props.map));
     await nextTick();
     create();

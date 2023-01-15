@@ -38,27 +38,26 @@ export class Trombone {
     }
 
     constructor(volume: number) {
-        console.log(volume);
         this.oscillators = [
             {
                 source: 'sawtooth',
                 volume: 1.0,
-                env: {      
-                    attack: 0,  
-                    decay: 0.1,  
-                    sustain: 0.8,  
-                    hold: 12, 
-                    release: 0.03     
+                env: {
+                    attack: 0.01,
+                    decay: 0.1,
+                    sustain: 0.8,
+                    hold: 12,
+                    release: 0.03
                 },
             }, {
                 source: 'sawtooth',
                 volume: 1.0,
-                env: {      
-                    attack: 0.02,  
-                    decay: 0.1,  
-                    sustain: 0.6,  
-                    hold: 12, 
-                    release: 0.03     
+                env: {
+                    attack: 0.02,
+                    decay: 0.1,
+                    sustain: 0.6,
+                    hold: 12,
+                    release: 0.03
                 },
             }
         ].map(obj => new Wad(obj));
@@ -66,9 +65,9 @@ export class Trombone {
         this.poly = new Wad.Poly({
             filter: [
                 {
-                    type: 'lowpass', 
-                    frequency: 1200,       
-                    q: 0,         
+                    type: 'lowpass',
+                    frequency: 1200,
+                    q: 0,
                     /*
                       env       : {          
                           frequency : 1200, 
@@ -78,24 +77,23 @@ export class Trombone {
                 },
                 { type: 'highpass', frequency: 520, q: 0 }
             ],
-            /*
               delay   : {
                   delayTime : .5,  
                   wet       : .25, 
                   feedback  : .25, 
               },
-              vibrato : { 
-                  shape     : 'sine', 
-                  magnitude : 3,      
-                  speed     : 4,      
-                  attack    : 0       
-              },
-              tremolo : { 
-                  shape     : 'sine', 
-                  magnitude : 3,      
-                  speed     : 4,      
-                  attack    : 0       
-              },
+            //   vibrato : { 
+            //       shape     : 'sine', 
+            //       magnitude : 3,      
+            //       speed     : 4,      
+            //       attack    : 0       
+            //   },
+            //   tremolo : { 
+            //       shape     : 'sine', 
+            //       magnitude : 3,      
+            //       speed     : 4,      
+            //       attack    : 0       
+            //   },
               tuna   : {
                   Chorus : {
                       intensity: 0.3,  
@@ -104,9 +102,8 @@ export class Trombone {
                       bypass: 0
                   }
               }
-              */
         });
 
-        this.oscillators.forEach(x=>x.setVolume(volume / 10_000));
+        this.oscillators.forEach(x => x.setVolume(volume / 10_000));
     }
 }

@@ -17,12 +17,11 @@ export const useMapStore = defineStore('maps', {
 
     try {
       const d = localStorage.getItem('maps');
-      console.log('Got maps');
       cached = JSON.parse(d ?? '');
-      console.log('Parsed maps');
+      console.log(`Read ${Object.keys(cached ?? {}).length} maps from localStorage`);
     } catch {
       // if loading fails we write the defaults
-      console.log('bad')
+      console.warn('Map cache invalid')
       localStorage.setItem('maps', JSON.stringify(cached = {}));
     }
     return {
@@ -58,7 +57,7 @@ export const useMapStore = defineStore('maps', {
       }
 
       await Promise.all(promises);
-      console.log({newCached,data})
+      console.log('Fetched map list')
       this.maps = newCached;
       localStorage.setItem('maps', JSON.stringify(newCached));
     }

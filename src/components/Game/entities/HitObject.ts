@@ -71,49 +71,6 @@ export class HitObject implements IEntity {
                 });
             }
         });
-        // let ppt = ho.pitches[0];
-
-        // for (let i = 1; i < ho.pitches.length; i++) {
-        //     const npt = ho.pitches[i];
-        //     if (ppt.pitch != npt.pitch) {
-        //         //bezier
-        //         const avrgTime = (ppt.time + npt.time) / 2;
-
-        //         const cp: Point[] = [      // put control points in this shape
-        //             [ppt.time, ppt.pitch], // ---|
-        //             [avrgTime, ppt.pitch], //    |
-        //             [avrgTime, npt.pitch], //    |
-        //             [npt.time, npt.pitch]  //    |---
-        //         ];
-
-        //         const bezierPoints = [...Array(Constants.HITBOX_RESOLUTION)]
-        //             .map((x, i) => i / (Constants.HITBOX_RESOLUTION - 1))
-        //             .map(n => bezierPoint(cp, n));
-
-        //         for (let j = 0; j < bezierPoints.length - 1; j++) {
-        //             const bp = bezierPoints[j];
-        //             const nbp = bezierPoints[j + 1];
-
-        //             hb.push({
-        //                 startTime: bp[0],
-        //                 startPitch: bp[1],
-        //                 slope: (nbp[1] - bp[1]) / (nbp[0] - bp[0]),
-        //                 endTime: nbp[0]
-        //             })
-        //         }
-
-        //     } else {
-        //         hb.push({
-        //             startTime: ppt.time,
-        //             startPitch: ppt.pitch,
-        //             slope: 0,
-        //             endTime: npt.time
-        //         })
-        //     }
-
-        //     ppt = npt;
-        // 
-
         return hb;
     }
 

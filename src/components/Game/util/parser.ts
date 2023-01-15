@@ -132,6 +132,5 @@ export class Song {
         if (!lastHitobject) throw new Error("Empty track");
 
         this.endTime = this.rawObject.endpoint * (60_000 / this.rawObject.tempo);
-        console.log(this);
     }
 }

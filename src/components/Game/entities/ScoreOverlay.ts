@@ -16,17 +16,18 @@ export class ScoreOverlay implements IEntity {
         ctx.textBaseline = 'top';
 
         ctx.textAlign = "right";
-        ctx.fillText(s.Score.toString(), this.g.w - 10, 20);
+        ctx.fillText(s.Score.toString(), this.g.w - 10, 30);
         ctx.textAlign = "left";
-        ctx.fillText(s.Combo.toString(), 10, 20);
+        ctx.fillText(s.Combo.toString(), 10, 30);
 
         ctx.font = "24px 'Open Sans'";
         ctx.textBaseline = 'bottom';
 
+        ctx.textBaseline = 'bottom';
         ctx.fillStyle = '#f44';
         ctx.textAlign = "right";
-        ctx.fillText('Score:', this.g.w - 10, 4);
+        ctx.fillText('Score:', this.g.w - 10, 28);
         ctx.textAlign = "left";
-        ctx.fillText('Combo:', 10, 4);
+        ctx.fillText('Combo:', 10, 28);
     }
 }
