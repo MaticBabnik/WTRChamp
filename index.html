@@ -1,15 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WTRChamp</title>
-  </head>
-  <body>
-    <div id="app">
-      <button>Start game</button>
-    </div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WTRChamp</title>
+  <style>
+    .pregame {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <main class="pregame">
+      <h1 class="title">Click anywhere to start the game</h1>
+      <h2 class="subtitle">Warning: flashing images</h2>
+      <p>Also, please go to settings and familiarize yourself with the keybinds</p>
+    </main>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

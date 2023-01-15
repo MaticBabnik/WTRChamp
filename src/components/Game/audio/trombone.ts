@@ -60,6 +60,7 @@ export class Trombone {
                     release: 0.03
                 },
             }
+        //@ts-ignore
         ].map(obj => new Wad(obj));
 
         this.poly = new Wad.Poly({

@@ -27,7 +27,7 @@ export interface IGameStartInfo {
 
 
 export async function init(key: string): Promise<IGameStartInfo> {
-    const songRoot = `/beatmaps/${key}`;
+    const songRoot = `${import.meta.env.VITE_PUBLIC_BASE}/beatmaps/${key}`;
 
     console.log('Looking for .tmb');
 

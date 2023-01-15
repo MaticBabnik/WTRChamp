@@ -83,8 +83,6 @@ export class HitObject implements IEntity {
         this.segments = sho.segments;
         this.end = sho.end;
         this.hitbox = HitObject.hitboxLineSegments(sho);
-
-        if (index == 0) console.log(this);
     }
 
     protected getHitboxSegment(t: number) {
@@ -139,7 +137,7 @@ export class HitObject implements IEntity {
             this.score(tLeft);
 
             if (this.g.settings.developer.debugHitbox) {
-                ctx.strokeStyle = '#0f08';
+                ctx.strokeStyle = '#0f03';
                 ctx.lineWidth = 50;
                 ctx.lineCap = 'round';
                 ctx.beginPath();

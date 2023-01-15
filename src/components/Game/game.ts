@@ -12,6 +12,7 @@ import { Player } from "./entities/Player";
 import { HoldAction } from "./entities/HoldAction";
 import { HitObjects } from "./entities/HitObjects";
 import { ScoreOverlay } from "./entities/ScoreOverlay";
+import { NoteCountdown } from "./entities/NoteCountdown";
 import { HitIndicators } from "./entities/HitIndicators";
 import { SongProgressbar } from "./entities/SongProgressbar";
 
@@ -42,6 +43,7 @@ export class Game extends ScopedGameEvents implements IGameEvents {
     protected progressbar: SongProgressbar;
     protected hitIndicators: HitIndicators;
     protected scoreOverlay: ScoreOverlay;
+    protected noteCountdown: NoteCountdown;
     public scoreKeeper = new ScoreKeeper();
 
     constructor(public canvas: HTMLCanvasElement, public settings: ISettings, public song: Song, protected audioStore: AudioStore) {
@@ -67,6 +69,7 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         this.hitIndicators = new HitIndicators(this);
         this.hitObjects = new HitObjects(this, this.hitIndicators);
         this.scoreOverlay = new ScoreOverlay(this);
+        this.noteCountdown = new NoteCountdown(this, this.hitObjects);
         this.holdActions = [
             new HoldAction(this, 'exit', 500, "Hold to exit", () => {
                 this.dispatchEvent(new GameEvent('exit'));
@@ -177,6 +180,8 @@ export class Game extends ScopedGameEvents implements IGameEvents {
         this.progressbar.render(this.ctx);
         // Render score and combo text
         this.scoreOverlay.render(this.ctx);
+        // Render note countdown
+        this.noteCountdown.render(this.ctx);
         // Render exit/restart overlays
         this.holdActions.forEach(ha => ha.render(this.ctx));
 

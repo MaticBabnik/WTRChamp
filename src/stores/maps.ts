@@ -30,7 +30,7 @@ export const useMapStore = defineStore('maps', {
   },
   actions: {
     async fetchMaps() {
-      const f = await fetch('/beatmaps.json');
+      const f = await fetch(`${import.meta.env.VITE_PUBLIC_BASE}/beatmaps.json`);
       const data = await f.json() as string[];
 
       const newCached: MapCache = {};
@@ -41,7 +41,7 @@ export const useMapStore = defineStore('maps', {
           newCached[key] = this.maps[key];
         } else {
           promises.push((async () => {
-            const mapReq = await fetch(`/beatmaps/${key}/song.tmb`);
+            const mapReq = await fetch(`${import.meta.env.VITE_PUBLIC_BASE}/beatmaps/${key}/song.tmb`);
             const mapData = await mapReq.json() as IMapMeta;
 
             newCached[key] = {

@@ -23,6 +23,9 @@ app.component(ScreenName.Score, ScoreScreen);
 
 app.use(createPinia())
 
+console.log("%cWtrchamp", 'color:#f4f;font-size:2rem;');
+console.log({ publicBaseUrl: import.meta.env.VITE_PUBLIC_BASE, mode: import.meta.env.MODE });
+
 window.addEventListener('click', () => {
     app.mount('#app')
 }, { once: true });

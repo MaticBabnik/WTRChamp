@@ -44,6 +44,8 @@ export function bezierPoint(controlPoints: Point[], f: number): Point {
     return [x, y];
 }
 
-// export function lineDist(linePoint:Point, k) {
-
-// }
+export function formatTime(ms: number): string {
+    const minutes = Math.floor(ms / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}

@@ -10,9 +10,9 @@ audio.init();
 
 
 //@ts-ignore
-const click = audio.registerWad('sfx', 'transition', new Wad({ source: '/sfx/transition.ogg' }));
+const click = audio.registerWad('sfx', 'transition', new Wad({ source: `${import.meta.env.VITE_PUBLIC_BASE}/sfx/transition.ogg` }));
 //@ts-ignore
-const bgm = audio.registerWad('music', 'bgm', new Wad({ source: '/sfx/bgm.ogg', loop: true }));
+const bgm = audio.registerWad('music', 'bgm', new Wad({ source: `${import.meta.env.VITE_PUBLIC_BASE}/sfx/bgm.ogg`, loop: true }));
 bgm.play();
 
 
@@ -40,5 +40,5 @@ function switchView(c: ScreenName, props: Record<string, any>) {
 </script>
 
 <template>
-    <component ref="cv" :is="currentView.c" v-bind="currentView.props" @switch="switchView"/>
+    <component ref="cv" :is="currentView.c" v-bind="currentView.props" @switch="switchView" />
 </template>

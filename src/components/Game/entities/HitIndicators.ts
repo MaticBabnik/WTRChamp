@@ -8,6 +8,13 @@ interface HitIndicator {
     firedAt: number
 }
 
+const HIT2COLOR: Record<HitScore, string> = {
+    Miss: '#F00',
+    Okay: '#000',
+    Good: '#0FF',
+    Perfect: '#0F0',
+}
+
 export class HitIndicators implements IEntity {
     protected indicators: HitIndicator[] = [];
     constructor(protected g: Game) {
@@ -52,6 +59,7 @@ export class HitIndicators implements IEntity {
                 remap(life, Constants.HIT_INDICATOR_MAXVIS, Constants.HIT_INDICATOR_LIFE, midY, midY / 2)
 
             ctx.globalAlpha = opacity;
+            ctx.shadowColor = HIT2COLOR[ind.type];
             ctx.strokeText(ind.type, gr.x + gr.w / 2, y);
             ctx.fillText(ind.type, gr.x + gr.w / 2, y);
 

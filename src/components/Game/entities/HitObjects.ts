@@ -79,4 +79,12 @@ export class HitObjects implements IEntity {
 
         this.activeHitObjects.forEach(h => h.render(ctx, tLeft, tRight, gr));
     }
+
+    public get AnyActiveHitObjects() {
+        return this.activeHitObjects.length > 0;
+    }
+
+    public get NextHitObjectTime() {
+        return this.activeHitObjects[0]?.start ?? this.song.HitObjects[this.hitObjectIndex]?.start ?? -1;
+    }
 }

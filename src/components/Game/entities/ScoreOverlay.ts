@@ -12,7 +12,7 @@ export class ScoreOverlay implements IEntity {
         ctx.shadowColor = '#000';
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 3;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 5;
         ctx.textBaseline = 'top';
 
         ctx.textAlign = "right";
@@ -29,5 +29,9 @@ export class ScoreOverlay implements IEntity {
         ctx.fillText('Score:', this.g.w - 10, 28);
         ctx.textAlign = "left";
         ctx.fillText('Combo:', 10, 28);
+
+        ctx.shadowColor = '';
+        ctx.shadowBlur = 0;
+
     }
 }
