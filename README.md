@@ -1,6 +1,8 @@
 # WTRChamp
 Trombone champ clone for web
 
+## [Test deployment](https://wtrchamp.femboy.si/index.html)
+
 ## Notes
 The project does not include `sfx/`, `beatmaps/` and `beatmaps.json` files/folders in `public` because... copyright laws and stuff.
 Get/make your own.
