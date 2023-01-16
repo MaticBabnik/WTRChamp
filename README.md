@@ -1,7 +1,7 @@
 # WTRChamp
 Trombone champ clone for web
 
-## [Test deployment](https://wtrchamp.femboy.si/index.html)
+## [Play online](https://wtr.babnik.io/)
 
 ## Notes
 The project does not include `sfx/`, `beatmaps/` and `beatmaps.json` files/folders in `public` because... copyright laws and stuff.
