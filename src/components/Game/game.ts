@@ -98,7 +98,7 @@ export class Game extends ScopedGameEvents implements IGameEvents {
     }
 
     keyEvent(v: boolean, e: KeyboardEvent) {
-        switch (e.key) {
+        switch (e.code) {
             case this.settings.controls.play:
                 if (this.keyboard.play.state == v) break; // prevent key repeating from fucking with us
                 this.keyboard.play.state = v; //update state

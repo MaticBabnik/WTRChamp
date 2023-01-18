@@ -24,7 +24,7 @@ function setCatch(v: boolean) {
 }
 
 function tryBind(e: KeyboardEvent) {
-    emit("update:value", e.key);
+    emit("update:value", e.code);
     e.preventDefault();
 }
 </script>

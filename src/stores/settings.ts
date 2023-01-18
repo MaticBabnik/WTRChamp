@@ -30,9 +30,9 @@ const DEFAULTS: ISettings = {
     timeWindow: 3_000
   },
   controls: {
-    restart: 'r',
-    play: 'z',
-    exit: 'q',
+    restart: 'KeyR',
+    play: 'KeyZ',
+    exit: 'KeyQ',
     sensitivity: 1.0,
   },
   volume: {
@@ -49,20 +49,20 @@ export const useSettingsStore = defineStore('settings', {
   state() {
     let settings: ISettings | null = null;
     try {
-      const d = localStorage.getItem('settings');
+      const d = localStorage.getItem('settings2');
       settings = JSON.parse(d ?? '');
       console.log('Read settings from localstorage');
     } catch {
       // if loading fails we write the defaults
       console.warn('Settings were broken, overwriting')
-      localStorage.setItem('settings', JSON.stringify(settings = DEFAULTS));
+      localStorage.setItem('settings2', JSON.stringify(settings = DEFAULTS));
     }
     defaultsDeep(settings, DEFAULTS); //merge with defaults just in case
     return settings as ISettings;
   },
   actions: {
     save() {
-      localStorage.setItem('settings', JSON.stringify(this.$state));
+      localStorage.setItem('settings2', JSON.stringify(this.$state));
     }
   }
 })
